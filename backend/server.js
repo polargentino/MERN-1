@@ -12,7 +12,7 @@ app.use(express.json());
 
 // Conectar a MongoDB
 mongoose
-    .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .connect(process.env.MONGO_URI)
     .then(() => console.log('Conexión a MongoDB establecida, GRACIAS POL!!!'))
     .catch((err) => console.error(err));
 
@@ -29,6 +29,8 @@ const FormSchema = new mongoose.Schema({
 const Form = mongoose.model('Form', FormSchema);
 
 // Rutas
+
+// Ruta para guardar un formulario
 app.post('/api/form', async (req, res) => {
     try {
         const newForm = new Form(req.body);
@@ -39,19 +41,18 @@ app.post('/api/form', async (req, res) => {
     }
 });
 
+// Ruta para obtener todos los usuarios
+app.get('/api/users', async (req, res) => {
+    try {
+        const users = await Form.find(); // Obtén todos los usuarios del modelo `Form`
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).send('Error al obtener los usuarios');
+    }
+});
+
+// Iniciar el servidor
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
-// Ruta GET para /api/users
-app.get('/api/users', (req, res) => {
-    res.status(200).json({ message: 'Ruta /api/users funciona correctamente' });
-});
-// Ruta GET para obtener todos los formularios
-app.get('/api/form', async (req, res) => {
-    try {
-        const forms = await Form.find();
-        res.status(200).json(forms);
-    } catch (error) {
-        res.status(500).send('Error al obtener los formularios');
-    }
-});
+
