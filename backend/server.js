@@ -42,3 +42,16 @@ app.post('/api/form', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+// Ruta GET para /api/users
+app.get('/api/users', (req, res) => {
+    res.status(200).json({ message: 'Ruta /api/users funciona correctamente' });
+});
+// Ruta GET para obtener todos los formularios
+app.get('/api/form', async (req, res) => {
+    try {
+        const forms = await Form.find();
+        res.status(200).json(forms);
+    } catch (error) {
+        res.status(500).send('Error al obtener los formularios');
+    }
+});
